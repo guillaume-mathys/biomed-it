@@ -1,0 +1,13 @@
+services:
+  orthanc:
+    image: orthancteam/orthanc
+    container_name: orthanc
+    ports:
+      - "8042:8042"
+      - "4242:4242"
+    volumes:
+      - /home/guillaume/orthanc-db:/var/lib/orthanc/db
+    environment:
+      WSI_PLUGIN_ENABLED: "true"
+      ORTHANC__REGISTERED_USERS: '{"orthanc": "orthanc"}'
+    restart: unless-stopped
