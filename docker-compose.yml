@@ -11,3 +11,23 @@ services:
       WSI_PLUGIN_ENABLED: "true"
       ORTHANC__REGISTERED_USERS: '{"orthanc": "orthanc"}'
     restart: unless-stopped
+  hapi-fhir:
+    image: hapiproject/hapi:latest
+    container_name: hapi-fhir
+    ports:
+      - "8080:8080"
+    restart: unless-stopped
+    volumes:
+      - hapi-data:/app/target
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:h2:file:/app/target/database/h2
+    depends_on:
+      hapi-init:
+        condition: service_completed_successfully
+  hapi-init:
+    image: alpine
+    volumes:
+      - hapi-data:/data
+    command: chown -R 65532:65532 /data
+volumes:
+  hapi-data:
